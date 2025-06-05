@@ -1,9 +1,13 @@
 "use client";
 
+import axios from "axios";
 import Link from "next/link";
+import { useRouter } from 'next/navigation'
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 const Login = () => {
+  const router = useRouter()
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -11,7 +15,30 @@ const Login = () => {
 
   const signIn = async () => {
     console.log(user);
-    // You can add your login logic here
+    //  login logic here
+
+    try {
+      const response = await axios.post("api/users/login", user)
+      console.log(response.data);
+      await Swal.fire({
+        icon: "success",
+        title: "Login Successful",
+        text: "Welcome back!",
+        confirmButtonText: "Continue",
+      });
+
+      // Redirect to profile page
+      router.push("/profile")
+
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Signup Failed",
+        text: "Something went wrong while creating your account. Please try again.",
+        confirmButtonText: "Okay",
+      });
+    }
+
   };
 
   return (
